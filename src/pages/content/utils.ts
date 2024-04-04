@@ -53,11 +53,10 @@ export function getXPath(el: Node): string | null {
   }
 }
 
-export const drawHighlight = ({
-  node,
-  startOffset,
-  endOffset,
-}: HighlightParams): void => {
+export const drawHighlight = (
+  { node, startOffset, endOffset }: HighlightParams,
+  theme: string
+): void => {
   if (!node || startOffset == null || endOffset == null || !node.textContent) {
     return;
   }
@@ -68,24 +67,30 @@ export const drawHighlight = ({
     range.setEnd(node, endOffset);
 
     const highlightSpan = document.createElement("freelog-highlight");
-    highlightSpan.className = "fh-orange";
+    highlightSpan.style.backgroundColor = theme;
     range.surroundContents(highlightSpan);
   } catch (error) {
     console.error("Error applying highlight:", error);
   }
 };
 
-export const highlightRange = ({ start, end }: RangeParams): void => {
+export const highlightRange = (
+  { start, end }: RangeParams,
+  theme: string
+): void => {
   if (!start || !end) {
     return;
   }
 
   if (start.node === end.node) {
-    drawHighlight({
-      node: start.node,
-      startOffset: start.offset,
-      endOffset: end.offset,
-    });
+    drawHighlight(
+      {
+        node: start.node,
+        startOffset: start.offset,
+        endOffset: end.offset,
+      },
+      theme
+    );
     return;
   }
 
@@ -97,23 +102,32 @@ export const highlightRange = ({ start, end }: RangeParams): void => {
     }
 
     if (node === startNode) {
-      drawHighlight({
-        node: node,
-        startOffset: start.offset,
-        endOffset: (node as Text).length,
-      });
+      drawHighlight(
+        {
+          node: node,
+          startOffset: start.offset,
+          endOffset: (node as Text).length,
+        },
+        theme
+      );
     } else if (node === endNode) {
-      drawHighlight({
-        node: node,
-        startOffset: 0,
-        endOffset: end.offset,
-      });
+      drawHighlight(
+        {
+          node: node,
+          startOffset: 0,
+          endOffset: end.offset,
+        },
+        theme
+      );
     } else {
-      drawHighlight({
-        node: node,
-        startOffset: 0,
-        endOffset: (node as Text).length,
-      });
+      drawHighlight(
+        {
+          node: node,
+          startOffset: 0,
+          endOffset: (node as Text).length,
+        },
+        theme
+      );
     }
   });
 };

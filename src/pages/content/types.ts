@@ -8,3 +8,8 @@ export interface RangeParams {
   start: { node: Node; offset: number };
   end: { node: Node; offset: number };
 }
+
+export interface ButtonPosition {
+  left: number;
+  top: number;
+}
