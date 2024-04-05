@@ -11,13 +11,11 @@ export default function App() {
   );
   const [showHighlighterPallet, setShowHighlighterPallet] = useState(false);
 
-  const buttonRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   function handleRemoveButton() {
     setButtonPosition(null);
     setShowHighlighterPallet(false);
-    const selection = window.getSelection();
-    selection?.removeAllRanges();
   }
 
   const handleTextSelection = useCallback((e: MouseEvent) => {
@@ -26,7 +24,6 @@ export default function App() {
     }
 
     const selection = window.getSelection();
-
     if (!selection || !selection.rangeCount || selection.isCollapsed) {
       handleRemoveButton();
       return;
@@ -56,6 +53,8 @@ export default function App() {
       if (selectedItem) {
         highlightRange(selectedItem, color);
         handleRemoveButton();
+        const selection = window.getSelection();
+        selection?.removeAllRanges();
       }
     },
     [selectedItem]
@@ -69,25 +68,30 @@ export default function App() {
       document.removeEventListener("mouseup", handleTextSelection);
       document.removeEventListener("scroll", handleRemoveButton);
     };
-  }, [handleTextSelection]);
+  }, [handleTextSelection, buttonPosition]);
 
   return (
-    <>
+    <div ref={ref} onBlur={() => console.log("blur")}>
       {buttonPosition != null && (
-        <div
-          ref={buttonRef}
-          style={{
-            position: "fixed",
-            left: buttonPosition.left,
-            top: buttonPosition.top,
-            zIndex: 10000,
-          }}
-        >
+        <div style={{ background: "red", padding: 5 }}>
           {showHighlighterPallet && (
-            <HighlighterPallet onSelectColor={handleHighlight} />
+            <div
+              style={{
+                position: "fixed",
+                left: buttonPosition.left,
+                top: buttonPosition.top - 32,
+                zIndex: 10000,
+              }}
+            >
+              <HighlighterPallet onSelectColor={handleHighlight} />
+            </div>
           )}
           <button
             style={{
+              position: "fixed",
+              left: buttonPosition.left,
+              top: buttonPosition.top,
+              zIndex: 10000,
               backgroundColor: "#101010",
               border: "1px solid #bdbaba",
               borderRadius: "5px",
@@ -103,6 +107,6 @@ export default function App() {
           </button>
         </div>
       )}
-    </>
+    </div>
   );
 }

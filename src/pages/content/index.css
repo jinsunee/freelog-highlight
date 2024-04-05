@@ -1,63 +1,10 @@
-:root {
-  --fh-dark: #101010;
-  --fh-blue: #67c6e3;
-  --fh-orange: #ffc374;
-  --fh-green: #bfea7c;
-  --fh-red: #eea5a6;
-  --fh-purple: #b784b7;
-  --fh-brown: #ecb159;
-  --fh-pink: #e493b3;
-  --fh-grey: #f0f0f0;
-  --fh-yellow: #fff455;
-  --fh-skyblue: #40a2e3;
+.highlighter-pallet-item {
+  width: 24px;
+  height: 24px;
+  border-radius: 3px;
 }
 
-.fh-blue {
-  background-color: var(--fh-blue);
-  color: var(--fh-dark);
-}
-
-.fh-orange {
-  background-color: var(--fh-orange);
-  color: var(--fh-dark);
-}
-
-.fh-green {
-  background-color: var(--fh-green);
-  color: var(--fh-dark);
-}
-
-.fh-red {
-  background-color: var(--fh-red);
-  color: var(--fh-dark);
-}
-
-.fh-purple {
-  background-color: var(--fh-purple);
-  color: var(--fh-dark);
-}
-
-.fh-brown {
-  background-color: var(--fh-brown);
-  color: var(--fh-dark);
-}
-
-.fh-pink {
-  background-color: var(--fh-pink);
-  color: var(--fh-dark);
-}
-
-.fh-grey {
-  background-color: var(--fh-grey);
-  color: var(--fh-dark);
-}
-
-.fh-yellow {
-  background-color: var(--fh-yellow);
-  color: var(--fh-dark);
-}
-
-.fh-skyblue {
-  background-color: var(--fh-skyblue);
-  color: var(--fh-dark);
+.highlighter-pallet-item:hover {
+  cursor: pointer;
+  opacity: 0.5;
 }
