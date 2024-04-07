@@ -4,10 +4,27 @@ export interface HighlightParams {
   endOffset: number;
 }
 
-export interface RangeParams {
-  start: { node: Node; offset: number };
-  end: { node: Node; offset: number };
+export interface HighlightRangeItemData {
+  parentNode: Node;
+  offset: number;
 }
+
+// TODO: 지워질 예정
+export interface HighlightRangeData {
+  start: HighlightRangeItemData;
+  end: HighlightRangeItemData;
+  text: string;
+}
+
+export type RealNodeData = {
+  node: Node;
+  offset: number;
+};
+
+export type RealNodeRangeData = {
+  start: RealNodeData;
+  end: RealNodeData;
+};
 
 export interface ButtonPosition {
   left: number;
