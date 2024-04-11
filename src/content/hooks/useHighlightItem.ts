@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { HighlightData } from "../types";
 import useHighlightItems from "./useHighlightItems";
 
-export default function useHighlightItem(id?: HighlightData["id"]) {
+export default function useHighlightItem(id: HighlightData["id"] | null) {
   const { data } = useHighlightItems();
   const [item, setItem] = useState<HighlightData>();
 

@@ -73,7 +73,10 @@ export default function HighlighterPallet({ onSelectColor }: Props) {
                 height: 24,
                 borderRadius: 3,
               }}
-              onClick={() => onSelectColor(pallet.color)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelectColor(pallet.color);
+              }}
             />
           ))}
         </div>
