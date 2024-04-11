@@ -10,10 +10,13 @@
   "permissions": ["storage", "activeTab"],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"],
+      "matches": ["<all_urls>", "*://*/*"],
+      "js": [
+        "../node_modules/@webcomponents/custom-elements/custom-elements.min.js",
+        "content.js"
+      ],
       "css": ["content.css"],
-      "run_at": "document_idle"
+      "run_at": "document_end"
     }
   ]
 }

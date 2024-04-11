@@ -5,7 +5,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        content: "src/pages/content/index.tsx",
+        content: "src/content/index.tsx",
       },
       output: {
         dir: "dist",

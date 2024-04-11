@@ -1,23 +1,23 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import HighlighterSvg from "../../assets/svgs/HighlighterSvg";
-import { HighlightData } from "../../types";
-import HighlighterPallet from "./highlighter-pallet";
-import { ButtonPosition, HighlightRangeData } from "./types";
+import useHighlightFirst from "../hooks/useHighlightFirst";
+import { ButtonPosition, HighlightData, HighlightRangeData } from "../types";
 import {
   findParentNodeOffsetFromRealNode,
   findRealNodeFromParentNodeOffset,
   getXPath,
   highlightRange,
-} from "./utils";
+} from "../utils";
+import HighlighterPallet from "./highlighter-pallet";
 
-export default function App() {
+export default function Highlighter() {
+  useHighlightFirst();
+
   const [selectedItem, setSelectedItem] = useState<HighlightRangeData>();
   const [buttonPosition, setButtonPosition] = useState<ButtonPosition | null>(
     null
   );
   const [showHighlighterPallet, setShowHighlighterPallet] = useState(false);
-
-  const ref = useRef<HTMLDivElement>(null);
 
   function handleRemoveButton() {
     setButtonPosition(null);
@@ -25,7 +25,7 @@ export default function App() {
   }
 
   const handleTextSelection = useCallback((e: MouseEvent) => {
-    if ((e.target as Node).nodeName === "FREELOG-HIGHLIGHTER-CONTAINER") {
+    if ((e.target as Node).nodeName === "FREELOG-HIGHLIGHTER-TOOLBOX-POPUP") {
       return;
     }
 
@@ -96,6 +96,8 @@ export default function App() {
         "highlightDataList",
         JSON.stringify([...highlightDataListParsed, highlightData])
       );
+
+      return highlightData;
     },
     [selectedItem]
   );
@@ -110,9 +112,10 @@ export default function App() {
           return;
         }
 
-        highlightRange({ start, end }, color);
-        // 저장하기
-        await saveOnStorage(selectedItem, color);
+        const result = await saveOnStorage(selectedItem, color);
+
+        highlightRange({ start, end }, { theme: color, id: result.id });
+
         handleRemoveButton();
         const selection = window.getSelection();
         selection?.removeAllRanges();
@@ -120,64 +123,6 @@ export default function App() {
     },
     [selectedItem, saveOnStorage]
   );
-
-  useEffect(() => {
-    setTimeout(() => {
-      const highlightDataList = localStorage.getItem("highlightDataList");
-      if (highlightDataList) {
-        const parsedDataList = JSON.parse(highlightDataList) as HighlightData[];
-        for (const {
-          startParentPath,
-          endParentPath,
-          style,
-          startOffset,
-          endOffset,
-        } of parsedDataList) {
-          const startParentNode = document.evaluate(
-            startParentPath,
-            document,
-            null,
-            XPathResult.FIRST_ORDERED_NODE_TYPE,
-            null
-          ).singleNodeValue as Node;
-
-          const endParentNode = document.evaluate(
-            endParentPath,
-            document,
-            null,
-            XPathResult.FIRST_ORDERED_NODE_TYPE,
-            null
-          ).singleNodeValue as Node;
-
-          if (startParentNode == null || endParentNode == null) {
-            return;
-          }
-
-          const start = findRealNodeFromParentNodeOffset({
-            parentNode: startParentNode,
-            offset: startOffset,
-          });
-
-          const end = findRealNodeFromParentNodeOffset({
-            parentNode: endParentNode,
-            offset: endOffset,
-          });
-
-          if (!start || !end) {
-            return;
-          }
-
-          highlightRange(
-            {
-              start,
-              end,
-            },
-            style.backgroundColor!
-          );
-        }
-      }
-    }, 500);
-  }, []);
 
   useEffect(() => {
     document.addEventListener("mouseup", handleTextSelection);
@@ -190,16 +135,16 @@ export default function App() {
   }, [handleTextSelection, buttonPosition]);
 
   return (
-    <div ref={ref}>
+    <>
       {buttonPosition != null && (
-        <div style={{ padding: 5 }}>
+        <>
           {showHighlighterPallet && (
             <div
               style={{
                 position: "fixed",
                 left: buttonPosition.left,
-                top: buttonPosition.top + 32,
-                zIndex: 10000,
+                top: buttonPosition.top - 50,
+                zIndex: 10001,
               }}
             >
               <HighlighterPallet onSelectColor={handleHighlight} />
@@ -224,8 +169,8 @@ export default function App() {
           >
             <HighlighterSvg />
           </button>
-        </div>
+        </>
       )}
-    </div>
+    </>
   );
 }
